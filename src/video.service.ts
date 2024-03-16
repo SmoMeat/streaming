@@ -41,17 +41,13 @@ export class VideoService {
         return `bytes ${rangeStart}-${rangeEnd}/${fileSize}`;
     }
 
-    async getPartialVideoStream(range: string) {
-        const path: string = 'videos\\Lady Gaga - Bad Romance (Official Music Video).mp4'
+    async getPartialVideoStream(id: string, range: string) {
+        const path: string = 'videos\\' + id
+        console.log(path)
         const videoMetadata = await this.getVideoStream(path)
         const fileSize = await this.getFileSize(path)
 
-        console.log(range)
-
         const { start, end } = this.parseRange(range, fileSize)
-
-        console.log(start, end)
-        console.log({ start, end })
 
         const stream = createReadStream(path, { start, end })
         
