@@ -1,8 +1,8 @@
-import { Controller, Get, Header, Headers, Param, Query, Res, StreamableFile } from '@nestjs/common';
+import { Controller, Get, Header, Headers, Post, Query, Res, StreamableFile, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { VideoService } from './video.service';
-import { createReadStream } from 'fs';
-import { join } from 'path';
 import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller()
 export class AppController {
@@ -28,5 +28,22 @@ export class AppController {
     @Get('search')
     searchVideo() {
         return this.videoService.findVideos()
+    }
+
+    @Post('video')
+    @UseInterceptors(
+        FileInterceptor('file', {
+            storage: diskStorage({
+                destination: './videos/',
+                filename: (req, file, callback) => {
+                    // TODO: gerer le cas ou on upload un fichier avec le meme nom qu'un deja existant
+                    callback(null, file.originalname)
+                }
+            })
+        })
+    )
+    uploadVideo(@UploadedFile() file: Express.Multer.File) {
+        // TODO: Vérifier que c'est bien une video et non un autre fichier
+        return this.videoService.uploadVideo(file)
     }
 }

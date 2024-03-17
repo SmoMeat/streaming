@@ -1,11 +1,21 @@
-import { BadRequestException, Injectable, StreamableFile } from '@nestjs/common';
+import { BadRequestException, Injectable, OnModuleInit, StreamableFile } from '@nestjs/common';
 import { createReadStream, readdir, readdirSync } from 'fs';
 import { stat } from 'fs/promises';
 import { join } from 'path';
 import { RangeDto } from './range.interface';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class VideoService {
+export class VideoService implements OnModuleInit {
+
+    constructor(
+        private readonly configService: ConfigService
+    ) {}
+
+    onModuleInit() {
+        // const url = this.configService.get('COSMOS_CONNECTION_STRING')
+        // const client = new Mongo
+    }
 
     getVideoStream(path: string): StreamableFile {
         const video = createReadStream(join(process.cwd(), path))
@@ -67,4 +77,10 @@ export class VideoService {
     async findVideos() {
         return readdirSync('./videos/')
     }
+
+    uploadVideo(file: Express.Multer.File) {
+        console.log(file)
+        console.log(file.originalname, file.filename, file.mimetype, file.size)
+    }
+
 }

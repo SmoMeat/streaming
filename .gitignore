@@ -1,4 +1,5 @@
-videos
+videos/
+.env
 
 # compiled output
 /dist
