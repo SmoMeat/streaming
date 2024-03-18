@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './video.module';
+import { AppModule } from './video/video.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

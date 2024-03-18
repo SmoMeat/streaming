@@ -4,12 +4,13 @@ import { stat } from 'fs/promises';
 import { join } from 'path';
 import { RangeDto } from './range.interface';
 import { ConfigService } from '@nestjs/config';
+import { IVideoService } from './video.interface';
 
 @Injectable()
-export class VideoService implements OnModuleInit {
+export class VideoFileService implements OnModuleInit, IVideoService {
 
     constructor(
-        private readonly configService: ConfigService
+        //private readonly configService: ConfigService
     ) {}
 
     onModuleInit() {
@@ -26,15 +27,6 @@ export class VideoService implements OnModuleInit {
         const status = await stat(path)
         return status.size
     }
-
-    // parseRange(range: string, fileSize: number) {
-    //     const parseResult = rangeParser(fileSize, range);
-    //     console.log(parseResult)
-    //     if (parseResult === -1 || parseResult === -2 || parseResult.length !== 1) {
-    //       throw new BadRequestException();
-    //     }
-    //     return parseResult[0];
-    // }
 
     parseRange(range: string, fileSize: number): RangeDto {
         try {
@@ -53,8 +45,7 @@ export class VideoService implements OnModuleInit {
 
     async getPartialVideoStream(id: string, range: string) {
         const path: string = 'videos\\' + id
-        console.log(path)
-        const videoMetadata = await this.getVideoStream(path)
+        //const videoMetadata = await this.getVideoStream(path)
         const fileSize = await this.getFileSize(path)
 
         const { start, end } = this.parseRange(range, fileSize)
@@ -78,7 +69,7 @@ export class VideoService implements OnModuleInit {
         return readdirSync('./videos/')
     }
 
-    uploadVideo(file: Express.Multer.File) {
+    uploadVideo(file: Express.Multer.File): void {
         console.log(file)
         console.log(file.originalname, file.filename, file.mimetype, file.size)
     }

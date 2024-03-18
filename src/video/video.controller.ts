@@ -1,19 +1,25 @@
-import { Controller, Get, Header, Headers, Post, Query, Res, StreamableFile, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { VideoService } from './video.service';
+import { Controller, Get, Header, Headers, Inject, Post, Query, Res, StreamableFile, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { VideoBlobService } from './video-blob.service';
+import { ConfigService } from '@nestjs/config';
+import { IVideoService } from './video.interface';
+import { InjectionToken } from 'src/injection-token.enum';
 
 @Controller()
 export class AppController {
-    constructor(private readonly videoService: VideoService) { }
+    constructor(
+        @Inject(InjectionToken.VIDEOSERVICE)
+        private videoService: IVideoService,
+
+    ) {}
 
     @Get('video')
     @Header('Accept-Ranges', 'bytes')
     @Header('Content-Type', 'application/octet-stream')
     async getVideo(@Headers('range') range: string, @Res({ passthrough: true }) res: Response, @Query('name') id): Promise<StreamableFile> {
-        console.log(range)
-
+        
         const {streamableFile, contentRange} = await this.videoService.getPartialVideoStream(id, range)
 
         res.status(206)
@@ -23,7 +29,6 @@ export class AppController {
     
         return streamableFile
     }
-
 
     @Get('search')
     searchVideo() {
