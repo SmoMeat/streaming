@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Headers, Inject, Post, Query, Res, StreamableFile, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Header, Headers, Inject, Param, Post, Query, Res, StreamableFile, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -15,10 +15,10 @@ export class AppController {
 
     ) {}
 
-    @Get('video')
+    @Get('videos/:id')
     @Header('Accept-Ranges', 'bytes')
     @Header('Content-Type', 'application/octet-stream')
-    async getVideo(@Headers('range') range: string, @Res({ passthrough: true }) res: Response, @Query('name') id): Promise<StreamableFile> {
+    async getVideo(@Headers('range') range: string, @Res({ passthrough: true }) res: Response, @Param('id') id): Promise<StreamableFile> {
         
         const {streamableFile, contentRange} = await this.videoService.getPartialVideoStream(id, range)
 

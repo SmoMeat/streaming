@@ -5,9 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { VideoBlobService } from './video-blob.service';
 import { InjectionToken } from 'src/injection-token.enum';
+import { AuthModule } from 'src/auth-service/auth.module';
 
 @Module({
     imports: [
+        AuthModule,
         ConfigModule.forRoot(),
         // MongooseModule.forRootAsync({
         //     imports: [ConfigModule],
