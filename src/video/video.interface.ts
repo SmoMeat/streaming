@@ -15,4 +15,8 @@ export interface IVideoService {
 
     uploadVideo(file: Express.Multer.File): void
 
+    save(path: string, contentType: string, media: Buffer,
+        //metadata: { [key: string]: string }[]
+        ): void
+
 }

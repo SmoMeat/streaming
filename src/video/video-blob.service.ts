@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, OnModuleInit, StreamableFile } from '@nestjs/common';
-import { createReadStream, readdir, readdirSync } from 'fs';
+import { readdirSync } from 'fs';
 import { stat } from 'fs/promises';
-import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
 import { DefaultAzureCredential } from '@azure/identity';
@@ -100,6 +99,13 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
     uploadVideo(file: Express.Multer.File) {
         console.log(file)
         console.log(file.originalname, file.filename, file.mimetype, file.size)
+    }
+
+    save(path: string, contentType: string, media: Buffer, 
+        //metadata: { [key: string]: string }[]
+        
+        ): void {
+
     }
 
 }

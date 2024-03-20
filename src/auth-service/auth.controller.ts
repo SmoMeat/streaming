@@ -11,8 +11,6 @@ export class AuthController {
 
     @Post('login')
     singin(@Body() signinDto: SigninDto) {
-        console.log('allo ?')
         return this.authService.signIn(signinDto.username, signinDto.password)
     }
-
 }

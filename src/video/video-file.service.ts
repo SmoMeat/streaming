@@ -1,16 +1,18 @@
 import { BadRequestException, Injectable, OnModuleInit, StreamableFile } from '@nestjs/common';
-import { createReadStream, readdir, readdirSync } from 'fs';
+import { createReadStream, createWriteStream, readdir, readdirSync } from 'fs';
 import { stat } from 'fs/promises';
 import { join } from 'path';
 import { RangeDto } from './range.interface';
 import { ConfigService } from '@nestjs/config';
 import { IVideoService } from './video.interface';
+import { diskStorage } from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Injectable()
 export class VideoFileService implements OnModuleInit, IVideoService {
 
     constructor(
-        //private readonly configService: ConfigService
+        //private readonly configService: ConfigService,
     ) {}
 
     onModuleInit() {
@@ -69,9 +71,43 @@ export class VideoFileService implements OnModuleInit, IVideoService {
         return readdirSync('./videos/')
     }
 
-    uploadVideo(file: Express.Multer.File): void {
+    uploadVideo(file: Express.Multer.File) {
+        
+
+
+        
+
+        // FileInterceptor('file', {
+        //         storage: diskStorage({
+        //             destination: './videos/',
+        //             filename: (req, file, callback) => {
+        //                 // TODO: gerer le cas ou on upload un fichier avec le meme nom qu'un deja existant
+        //                 callback(null, file.originalname)
+        //             }
+        //         })
+        //     })
+        return 'hello'
+        file.stream
         console.log(file)
         console.log(file.originalname, file.filename, file.mimetype, file.size)
     }
 
+    async save(
+        path: string,
+        contentType: string,
+        media: Buffer,
+        //metadata: { [key: string]: string }[]
+    ) {
+        //const object = metadata.reduce((obj, item) => Object.assign(obj, item), {});
+        // const file = this.storage.bucket(this.bucket).file(path);
+        // const stream = file.createWriteStream();
+
+
+        // stream.on("finish", async () => {
+        //     return await file.setMetadata({
+        //         metadata: object,
+        //     });
+        // });
+        // stream.end(media);
+    }
 }
