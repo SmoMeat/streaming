@@ -6,10 +6,17 @@ import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
 import { DefaultAzureCredential } from '@azure/identity';
 import { RangeDto } from 'src/video/range.interface';
 import { IVideoService } from './video.interface';
+import { JwtPayloadDto } from './jwt-payload.interface';
 
 @Injectable()
 export class VideoBlobService implements OnModuleInit, IVideoService {
+
     containerClient: ContainerClient;
+    TRUTH_TABLE = { // TODO : add more extension
+        "video/mp4": ".mp4",
+        "video/mpeg": ".mpeg",
+        "video/webm": ".webm"
+    }
     
     constructor(
         private readonly configService: ConfigService
@@ -96,13 +103,24 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
         return readdirSync('./videos/')
     }
 
-    async uploadVideo(file: Express.Multer.File) {
-        console.log('uploading...')
-        const blobClient = this.containerClient.getBlockBlobClient('testname')
-        const start = Date.now()
-        const x = await blobClient.uploadData(file.buffer)
-        console.log(Date.now() - start)
+    async uploadVideo(file: Express.Multer.File, jwtPayload: JwtPayloadDto) {
+        if (this.TRUTH_TABLE[file.mimetype] === undefined) {
+            return `${file.mimetype} is not supported`
+        }
+
+        file.filename = Date.now().toString() + this.mimeTypeToExtension(file.mimetype)
+        const blobClient = this.containerClient.getBlockBlobClient(file.filename)
+        await blobClient.uploadData(file.buffer)
+        await blobClient.setMetadata({
+            originalName: file.originalname,
+            mimetype: file.mimetype,
+            user: jwtPayload.username,
+        })
         
+    }
+
+    mimeTypeToExtension(mimetype: string): string {
+        return this.TRUTH_TABLE[mimetype]
     }
 
     save(path: string, contentType: string, media: Buffer, 

@@ -1,3 +1,4 @@
+import { JwtPayloadDto } from './jwt-payload.interface';
 import { RangeDto } from './range.interface';
 
 
@@ -13,7 +14,7 @@ export interface IVideoService {
 
     findVideos(): any
 
-    uploadVideo(file: Express.Multer.File): void
+    uploadVideo(file: Express.Multer.File, jwtPayload: JwtPayloadDto): void
 
     save(path: string, contentType: string, media: Buffer,
         //metadata: { [key: string]: string }[]

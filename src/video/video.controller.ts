@@ -9,12 +9,16 @@ import { InjectionToken } from 'src/injection-token.enum';
 import { AuthGuard } from 'src/auth-service/auth.guard';
 import { Readable} from 'stream';
 import * as FormData from "form-data";
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayloadDto } from './jwt-payload.interface';
 
 @Controller()
 export class AppController {
     constructor(
         @Inject(InjectionToken.VIDEOSERVICE)
         private videoService: IVideoService,
+
+        private jwtService: JwtService
 
     ) {}
 
@@ -68,8 +72,10 @@ export class AppController {
     }
 
     @Post('upload')
+    @UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('file'))
-    uploadFile(@UploadedFile() file: Express.Multer.File) {
-        return this.videoService.uploadVideo(file)
+    async uploadFile(@UploadedFile() file: Express.Multer.File, @Headers('Authorization') auth: string) {
+        const jwtPayload: JwtPayloadDto = await this.jwtService.decode(auth.split(' ')[1])
+        return this.videoService.uploadVideo(file, jwtPayload)
     }
 }
