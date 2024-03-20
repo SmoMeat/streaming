@@ -70,17 +70,6 @@ export class AppController {
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
     uploadFile(@UploadedFile() file: Express.Multer.File) {
-
-        const formData = new FormData();
-        const stream = Readable.from(file.buffer);
-
-        formData.append("anyKeyValue", stream, {
-            filename: file.originalname,
-            contentType: file.mimetype
-        })
-
-
-        console.log(typeof file.stream)
-        console.log(file);
+        return this.videoService.uploadVideo(file)
     }
 }

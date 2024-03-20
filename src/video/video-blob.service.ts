@@ -96,9 +96,13 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
         return readdirSync('./videos/')
     }
 
-    uploadVideo(file: Express.Multer.File) {
-        console.log(file)
-        console.log(file.originalname, file.filename, file.mimetype, file.size)
+    async uploadVideo(file: Express.Multer.File) {
+        console.log('uploading...')
+        const blobClient = this.containerClient.getBlockBlobClient('testname')
+        const start = Date.now()
+        const x = await blobClient.uploadData(file.buffer)
+        console.log(Date.now() - start)
+        
     }
 
     save(path: string, contentType: string, media: Buffer, 
