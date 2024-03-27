@@ -123,11 +123,5 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
         return this.TRUTH_TABLE[mimetype]
     }
 
-    save(path: string, contentType: string, media: Buffer, 
-        //metadata: { [key: string]: string }[]
-        
-        ): void {
-
-    }
 
 }

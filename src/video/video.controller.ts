@@ -60,19 +60,13 @@ export class AppController {
     async uploadVideo(@UploadedFile() file: Express.Multer.File) {
         // TODO: Vérifier que c'est bien une video et non un autre fichier
         
-        await this.videoService.save(
-            "./videos",
-            file.mimetype,
-            file.buffer
-            //[{ mediaId: mediaId }]
-        );
         
         
         //return this.videoService.uploadVideo(file)
     }
 
     @Post('upload')
-    @UseGuards(AuthGuard)
+    //@UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('file'))
     async uploadFile(@UploadedFile() file: Express.Multer.File, @Headers('Authorization') auth: string) {
         const jwtPayload: JwtPayloadDto = await this.jwtService.decode(auth.split(' ')[1])
