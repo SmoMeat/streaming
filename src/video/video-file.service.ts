@@ -81,23 +81,4 @@ export class VideoFileService implements OnModuleInit, IVideoService {
             stream,
         )
     }
-
-    async save(
-        path: string,
-        contentType: string,
-        media: Buffer,
-        //metadata: { [key: string]: string }[]
-    ) {
-        //const object = metadata.reduce((obj, item) => Object.assign(obj, item), {});
-        // const file = this.storage.bucket(this.bucket).file(path);
-        // const stream = file.createWriteStream();
-
-
-        // stream.on("finish", async () => {
-        //     return await file.setMetadata({
-        //         metadata: object,
-        //     });
-        // });
-        // stream.end(media);
-    }
 }
