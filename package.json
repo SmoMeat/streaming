@@ -29,6 +29,7 @@
     "@nestjs/mongoose": "^10.0.4",
     "@nestjs/platform-express": "^10.0.0",
     "@types/range-parser": "^1.2.7",
+    "mongoose": "^8.2.4",
     "range-parser": "^1.2.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"

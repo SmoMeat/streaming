@@ -7,6 +7,9 @@ import { DefaultAzureCredential } from '@azure/identity';
 import { RangeDto } from 'src/video/range.interface';
 import { IVideoService } from './video.interface';
 import { JwtPayloadDto } from './jwt-payload.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Video } from './video.model';
 
 @Injectable()
 export class VideoBlobService implements OnModuleInit, IVideoService {
@@ -19,7 +22,10 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
     }
     
     constructor(
-        private readonly configService: ConfigService
+        @InjectModel('Video')
+        private readonly videoModel: Model<Video>,
+
+        private readonly configService: ConfigService,
     ) {}
 
     onModuleInit() {
@@ -116,7 +122,19 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
             mimetype: file.mimetype,
             user: jwtPayload.username,
         })
-        
+    }
+
+    async insertVideoMetadata(title: string, filename: string, description: string, author: string) {
+        const videoMetadata = new this.videoModel({
+            title,
+            filename,
+            description,
+            author,
+            lastUpdated: Date.now().toString()
+        })
+        const result = await videoMetadata.save()
+        console.log(result)
+        return
     }
 
     mimeTypeToExtension(mimetype: string): string {

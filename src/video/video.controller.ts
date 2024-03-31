@@ -46,4 +46,10 @@ export class AppController {
         const jwtPayload: JwtPayloadDto = await this.jwtService.decode(auth.split(' ')[1])
         return this.videoService.uploadVideo(file, jwtPayload)
     }
+
+    @Get('test')
+    testing() {
+        this.videoService.insertVideoMetadata('Dune 2', 'Dune-part2.mp4', 'Le meilleur film de lannee', 'user37')
+        return ':)'
+    }
 }
