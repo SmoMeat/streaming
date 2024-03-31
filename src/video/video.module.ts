@@ -16,7 +16,6 @@ import { VideoSchema } from './video.schema';
         ConfigModule.forRoot({
             isGlobal: true
         }),
-        // MongooseModule.forRoot('mongodb+srv://mathieu:prout1234@streamhive.5nsizxj.mongodb.net/?retryWrites=true&w=majority&appName=StreamHive'),
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
             useFactory: async (configService: ConfigService) => ({
