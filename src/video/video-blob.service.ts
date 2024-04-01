@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, OnModuleInit, StreamableFile } from '@
 import { readdirSync } from 'fs';
 import { stat } from 'fs/promises';
 import { ConfigService } from '@nestjs/config';
-import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
+import { BlobServiceClient, BlobUploadCommonResponse, ContainerClient } from '@azure/storage-blob';
 import { DefaultAzureCredential } from '@azure/identity';
 import { RangeDto } from 'src/video/range.interface';
 import { IVideoService } from './video.interface';
@@ -10,6 +10,7 @@ import { JwtPayloadDto } from './jwt-payload.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Video } from './video.model';
+import { VideoInfoDto } from './video-info.interface';
 
 @Injectable()
 export class VideoBlobService implements OnModuleInit, IVideoService {
@@ -18,7 +19,8 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
     TRUTH_TABLE = { // TODO : add more extension
         "video/mp4": ".mp4",
         "video/mpeg": ".mpeg",
-        "video/webm": ".webm"
+        "video/webm": ".webm",
+        "video/x-matroska": ".mkv",
     }
     
     constructor(
@@ -34,6 +36,7 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
             new DefaultAzureCredential()
         )
         this.containerClient = blobServiceClient.getContainerClient('videos');
+        console.log('Connected to the blob')
     }
 
     async getVideoStream2(id: string) { //: Promise<NodeJS.ReadableStream>
@@ -109,24 +112,29 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
         return readdirSync('./videos/')
     }
 
-    async uploadVideo(file: Express.Multer.File, jwtPayload: JwtPayloadDto) {
+    async uploadVideo(file: Express.Multer.File, videoInfo: VideoInfoDto) {
+        await this.saveVideo(file)
+        console.log(file.filename)
+        // await this.saveThumbnail(this.getThumbnail)
+        const thumbnailUrl = 'blobstorage/.../img.png'
+        await this.saveVideoMetadata(videoInfo.title, file.filename, videoInfo.description, videoInfo.author, file.size, thumbnailUrl)
+    }
+
+    async saveVideo(file: Express.Multer.File): Promise<BlobUploadCommonResponse | string> {
         if (this.TRUTH_TABLE[file.mimetype] === undefined) {
-            return `${file.mimetype} is not supported`
+            console.log(`${file.mimetype} is not supported`)
+            return 'error!'
         }
 
         file.filename = Date.now().toString() + this.mimeTypeToExtension(file.mimetype)
         const blobClient = this.containerClient.getBlockBlobClient(file.filename)
-        await blobClient.uploadData(file.buffer)
-        await blobClient.setMetadata({
-            originalName: file.originalname,
-            mimetype: file.mimetype,
-            user: jwtPayload.username,
-        })
+        
+        return await blobClient.uploadData(file.buffer)
     }
 
     // TODO : uploadThumbnail()
 
-    async insertVideoMetadata(title: string, filename: string, description: string, author: string, length: number, thumbnail: string) {
+    async saveVideoMetadata(title: string, filename: string, description: string, author: string, length: number, thumbnail: string) {
         const videoMetadata = new this.videoModel({
             title,
             filename,

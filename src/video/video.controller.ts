@@ -6,6 +6,7 @@ import { InjectionToken } from 'src/injection-token.enum';
 import { AuthGuard } from 'src/auth-service/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayloadDto } from './jwt-payload.interface';
+import { VideoInfoDto } from './video-info.interface';
 
 @Controller()
 export class AppController {
@@ -43,13 +44,19 @@ export class AppController {
     @UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('file'))
     async uploadFile(@UploadedFile() file: Express.Multer.File, @Headers('Authorization') auth: string) {
+        console.log('Uploading...')
         const jwtPayload: JwtPayloadDto = await this.jwtService.decode(auth.split(' ')[1])
-        return this.videoService.uploadVideo(file, jwtPayload)
+        const videoInfo: VideoInfoDto = {
+            author: jwtPayload.username,
+            title: 'Flipbook',
+            description: 'Un petit film fantastique!',
+        }
+        return this.videoService.uploadVideo(file, videoInfo)
     }
 
     @Get('test')
     testing() {
-        this.videoService.insertVideoMetadata('Dune 2', 'Dune-part2.mp4', 'Le meilleur film de lannee', 'user37')
+        this.videoService.saveVideoMetadata('Dune 2', 'Dune-part2.mp4', 'Le meilleur film de lannee', 'user37', 301313, 'google.com/img')
         return ':)'
     }
 }

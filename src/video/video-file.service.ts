@@ -9,6 +9,7 @@ import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtPayloadDto } from './jwt-payload.interface';
 import { pipeline } from 'stream';
+import { VideoInfoDto } from './video-info.interface';
 
 @Injectable()
 export class VideoFileService implements OnModuleInit, IVideoService {
@@ -73,7 +74,7 @@ export class VideoFileService implements OnModuleInit, IVideoService {
         return readdirSync('./videos/')
     }
 
-    async uploadVideo(file: Express.Multer.File, jwtPayload: JwtPayloadDto) {
+    async uploadVideo(file: Express.Multer.File, videoInf: VideoInfoDto) {
 
         const stream = createWriteStream('./videos')
         await pipeline(
@@ -82,7 +83,7 @@ export class VideoFileService implements OnModuleInit, IVideoService {
         )
     }
 
-    async insertVideoMetadata(title: string, filename: string, description: string, author: string, length: number, thumbnail: string) {
+    async saveVideoMetadata(title: string, filename: string, description: string, author: string, length: number, thumbnail: string) {
         return
     }
 }

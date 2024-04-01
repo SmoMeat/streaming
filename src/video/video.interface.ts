@@ -1,5 +1,6 @@
 import { JwtPayloadDto } from './jwt-payload.interface';
 import { RangeDto } from './range.interface';
+import { VideoInfoDto } from './video-info.interface';
 
 
 export interface IVideoService {
@@ -14,8 +15,8 @@ export interface IVideoService {
 
     findVideos(): any
 
-    uploadVideo(file: Express.Multer.File, jwtPayload: JwtPayloadDto): void
+    uploadVideo(file: Express.Multer.File, videoInfo: VideoInfoDto): void
 
-    insertVideoMetadata(title: string, filename: string, description: string, author: string, length: number, thumbnail: string)
+    saveVideoMetadata(title: string, filename: string, description: string, author: string, length: number, thumbnail: string)
 
 }
