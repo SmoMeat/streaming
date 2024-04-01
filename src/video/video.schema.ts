@@ -1,21 +1,21 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+// import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+// import { HydratedDocument } from 'mongoose';
 
-export type VideoDocument = HydratedDocument<Video>;
+// export type VideoDocument = HydratedDocument<Video>;
 
-@Schema()
-export class Video {
-    @Prop()
-    name: string;
+// @Schema()
+// export class Video {
+//     @Prop()
+//     name: string;
 
-    @Prop()
-    author: string;
+//     @Prop()
+//     author: string;
 
-    @Prop()
-    type: string;
+//     @Prop()
+//     type: string;
 
-    @Prop()
-    size: number;
-}
+//     @Prop()
+//     size: number;
+// }
 
-export const VideoSchema = SchemaFactory.createForClass(Video);
+// export const VideoSchema = SchemaFactory.createForClass(Video);

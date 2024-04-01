@@ -16,6 +16,6 @@ export interface IVideoService {
 
     uploadVideo(file: Express.Multer.File, jwtPayload: JwtPayloadDto): void
 
-    insertVideoMetadata(title: string, filename: string, description: string, author: string)
+    insertVideoMetadata(title: string, filename: string, description: string, author: string, length: number, thumbnail: string)
 
 }

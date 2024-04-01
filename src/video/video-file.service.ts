@@ -82,7 +82,7 @@ export class VideoFileService implements OnModuleInit, IVideoService {
         )
     }
 
-    async insertVideoMetadata(title: string, filename: string, description: string, author: string) {
+    async insertVideoMetadata(title: string, filename: string, description: string, author: string, length: number, thumbnail: string) {
         return
     }
 }

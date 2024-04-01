@@ -8,7 +8,7 @@ import { InjectionToken } from 'src/injection-token.enum';
 import { AuthModule } from 'src/auth-service/auth.module';
 import { SasController } from 'src/sas/sas.controller';
 import { SasService } from 'src/sas/sas.service';
-import { VideoSchema } from './video.schema';
+import { VideoSchema } from './video.model';
 
 @Module({
     imports: [
@@ -23,7 +23,7 @@ import { VideoSchema } from './video.schema';
             }),
             inject: [ConfigService],
         }),
-        MongooseModule.forFeature([{ name: 'Video', schema: VideoSchema }])
+        MongooseModule.forFeature([{ name: 'videos', schema: VideoSchema }])
     ],
     controllers: [AppController, SasController],
     providers: [

@@ -5,14 +5,18 @@ export const VideoSchema = new mongoose.Schema({
     filename: { type: String, required: true },
     description: { type: String, required: true },
     author: { type: String, required: true },
+    length: { type: Number, required: true },
+    thumbnail: { type: String, required: true },
     lastUpdated: { type: String, required: true },
 })
 
-export interface  Video {
+export interface Video {
         id: string;
         title: string;
         filename: string;
         description: string;
         author: string;
+        length: number;
+        thumbnail: string;
         lastUpdated: string;
 }

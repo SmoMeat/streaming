@@ -22,7 +22,7 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
     }
     
     constructor(
-        @InjectModel('Video')
+        @InjectModel('videos')
         private readonly videoModel: Model<Video>,
 
         private readonly configService: ConfigService,
@@ -124,14 +124,19 @@ export class VideoBlobService implements OnModuleInit, IVideoService {
         })
     }
 
-    async insertVideoMetadata(title: string, filename: string, description: string, author: string) {
+    // TODO : uploadThumbnail()
+
+    async insertVideoMetadata(title: string, filename: string, description: string, author: string, length: number, thumbnail: string) {
         const videoMetadata = new this.videoModel({
             title,
             filename,
             description,
             author,
+            length,
+            thumbnail,
             lastUpdated: Date.now().toString()
         })
+        console.log(videoMetadata.description)
         const result = await videoMetadata.save()
         console.log(result)
         return
